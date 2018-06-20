@@ -1,6 +1,3 @@
-module.exports = function models(datastar) {
-  return new StatusModels(datastar);
-}
 
 class StatusModels {
   constructor(datastar) {
@@ -26,3 +23,7 @@ class StatusModels {
     );
   }
 }
+
+module.exports = function models(datastar) {
+  return new StatusModels(datastar);
+};
