@@ -7,10 +7,10 @@ class CounterWrap extends Wrap {
   //
   // This should be exposed in datastar but its not clear how to do that yet
   //
-  async increment(opts) {
+  async increment(params) {
     const client = await this._getPool();
     const query = `UPDATE status_counter SET count=count+1 WHERE pkg=:pkg, env=:env, version=:version`;
-    return client.execute(query, opts, { prepare: true, counter: true});
+    return client.execute(query, params, { prepare: true, counter: true });
   }
 }
 

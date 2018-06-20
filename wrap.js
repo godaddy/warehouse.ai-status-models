@@ -29,6 +29,7 @@ class ModelWrap {
   /**
    * Get the raw cassandra-driver because we need to do some special shit for
    * counters
+   * @returns {Thenable} raw cassandra driver
    */
   _getConnection() {
     return thenify(this.model.connection, 'getConnectionPool', null, false);

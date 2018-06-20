@@ -1,5 +1,4 @@
 const assume = require('assume');
-const clone = require('clone');
 const ModelWrap = require('../wrap');
 const models = require('..');
 
@@ -9,7 +8,7 @@ describe('warehouse.ai-status-models (unit)', function () {
   let dal;
 
   beforeEach(function () {
-    let datastar = helpers.connectDatastar({ mock: true }, mocks.datastar());
+    const datastar = helpers.connectDatastar({ mock: true }, mocks.datastar());
     dal = models(datastar);
   });
 
