@@ -6,7 +6,7 @@ const clone = require('clone');
 const { StatusFixture,
         StatusHeadFixture,
         StatusCounterFixture,
-        StatusEvent } = require('./fixtures');
+        StatusEventFixture } = require('./fixtures');
 
 const datastar = new Datastar(require('./config'));
 const models = statusModels(datastar);
@@ -14,6 +14,7 @@ const models = statusModels(datastar);
 const { Status, StatusHead, StatusCounter, StatusEvent } = models;
 
 describe('status-models (integration)', function () {
+  this.timeout(6E4);
   before(async function () {
     if (process.env.DEBUG) { // eslint-disable-line no-process-env
       datastar.connection.on('queryStarted', function () {
