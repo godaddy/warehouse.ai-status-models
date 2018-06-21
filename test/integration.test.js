@@ -1,5 +1,6 @@
 const thenify = require('tinythen');
 const Datastar = require('datastar');
+const assume = require('assume');
 const statusModels = require('..');
 const clone = require('clone');
 
@@ -51,8 +52,8 @@ describe('status-models (integration)', function () {
       assume(result.version).equals(StatusFixture.version);
       assume(result.previousVersion).equals(StatusFixture.previousVersion);
       assume(result.total).equals(StatusFixture.total);
-      assume(result.createDate).equals(StatusFixture.createDate)
-      assume(result.updateDate).equals(StatusFixture.updateDate);
+      assume(result.createDate).eql(StatusFixture.createDate)
+      assume(result.updateDate).eql(StatusFixture.updateDate);
       assume(result.complete).equals(StatusFixture.complete);
     });
 
