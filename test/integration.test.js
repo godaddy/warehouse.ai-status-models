@@ -37,6 +37,16 @@ function assertEvent(result, fixture = StatusEventFixture) {
   assume(result.eventId).equals(fixture.eventId);
 }
 
+function thenStream(stream) {
+  return {
+    then(resolve, reject) {
+      const buf = [];
+      stream.once('error', reject);
+      stream.on('data', (d) => buf.push(d));
+      stream.once('end', () => resolve(buf));
+    }
+  };
+}
 describe('warehouse.ai-status-models (integration)', function () {
   this.timeout(6E4);
   before(async function () {
@@ -148,6 +158,20 @@ describe('warehouse.ai-status-models (integration)', function () {
       const { pkg, env, version } = StatusEventFixture;
       const results = await StatusEvent.findAll({ pkg, env, version });
       assume(results).is.length(2);
+      const [one, two] = results;
+      assertEvent(one, StatusEventFixture);
+      assertEvent(two, fixture2);
+      await Promise.all(results.map(r => StatusEvent.remove(r)));
+    });
+
+    it('should create 2 status-event records, and be able to find using a stream', async function () {
+      const fixture2 = { ...StatusEventFixture, eventId: uuid.v1() };
+      await StatusEvent.create(StatusEventFixture);
+      await StatusEvent.create(fixture2);
+      const { pkg, env, version } = StatusEventFixture;
+
+      const stream = StatusEvent.findAllStream({ pkg, env, version });
+      const results = await thenStream(stream);
       const [one, two] = results;
       assertEvent(one, StatusEventFixture);
       assertEvent(two, fixture2);
