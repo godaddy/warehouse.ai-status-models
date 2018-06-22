@@ -1,4 +1,6 @@
 # warehouse.ai-status-models
+[![Build
+Status](https://travis-ci.org/warehouseai/warehouse.ai-status-models.svg?branch=master)](https://travis-ci.org/warehouseai/warehouse.ai-status-models)
 
 Datastar models for the warehouse.ai-status-api
 
