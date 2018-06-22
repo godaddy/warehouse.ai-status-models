@@ -27,8 +27,8 @@ class StatusModels {
    */
   ensure() {
     return Promise.all(
-      Object.keys(this).map(model => {
-        return model.ensure();
+      Object.keys(this).map(name => {
+        return this[name].ensure();
       })
     );
   }
@@ -41,8 +41,8 @@ class StatusModels {
    */
   drop() {
     return Promise.all(
-      Object.keys(this).map(model => {
-        return model.drop();
+      Object.keys(this).map(name => {
+        return this[name].drop();
       })
     );
   }

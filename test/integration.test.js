@@ -37,7 +37,7 @@ function assertEvent(result, fixture = StatusEventFixture) {
   assume(result.eventId).equals(fixture.eventId);
 }
 
-describe('status-models (integration)', function () {
+describe('warehouse.ai-status-models (integration)', function () {
   this.timeout(6E4);
   before(async function () {
     if (process.env.DEBUG) { // eslint-disable-line no-process-env
@@ -50,6 +50,13 @@ describe('status-models (integration)', function () {
 
   after(async function () {
     await thenify(datastar, 'close');
+  });
+
+  describe('models', function () {
+    it('should ensure and drop all models', async function () {
+      await models.ensure();
+      await models.drop();
+    });
   });
 
   describe('status', function () {
