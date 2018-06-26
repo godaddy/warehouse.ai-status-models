@@ -8,7 +8,8 @@ exports.StatusFixture = {
   total: 10,
   createDate: new Date(),
   updateDate: new Date(),
-  complete: false
+  complete: false,
+  error: false
 };
 
 exports.StatusHeadFixture = {
@@ -18,8 +19,7 @@ exports.StatusHeadFixture = {
   previousVersion: '0.9.0',
   total: 10,
   createDate: new Date(),
-  updateDate: new Date(),
-  complete: false
+  updateDate: new Date()
 };
 
 exports.StatusCounterFixture = {
