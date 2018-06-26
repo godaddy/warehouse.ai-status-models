@@ -18,6 +18,7 @@ module.exports = function status(datastar) {
       version: cql.text(),
       previous_version: cql.text(),
       total: cql.int(),
+      error: cql.boolean(),
       create_date: cql.timestamp(),
       update_date: cql.timestamp(),
       complete: cql.boolean()
