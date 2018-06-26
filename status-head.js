@@ -18,8 +18,7 @@ module.exports = function stathead(datastar) {
       previous_version: cql.text(),
       total: cql.int(),
       create_date: cql.timestamp(),
-      update_date: cql.timestamp(),
-      complete: cql.boolean()
+      update_date: cql.timestamp()
     }).partitionKey(['pkg', 'env']),
     with: {
       compaction: {
