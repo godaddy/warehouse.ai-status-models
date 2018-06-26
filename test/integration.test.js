@@ -22,7 +22,7 @@ function assertStatus(result, fixture = StatusFixture) {
   assume(result.total).equals(fixture.total);
   assume(result.createDate).is.a('date');
   assume(result.updateDate).is.a('date');
-  assume(result.complete).equals(fixture.complete);
+  if (result.complete) assume(result.complete).equals(fixture.complete);
 }
 
 function assertEvent(result, fixture = StatusEventFixture) {
@@ -122,18 +122,6 @@ describe('warehouse.ai-status-models (integration)', function () {
       const result = await StatusHead.findOne(StatusHeadFixture);
       assertStatus(result, StatusHeadFixture);
       await StatusHead.remove(StatusHeadFixture);
-    });
-
-    it('should create, find, update and remove a status-head record', async function () {
-      await StatusHead.create(StatusHeadFixture);
-      const result = await StatusHead.findOne(StatusHeadFixture);
-      assertStatus(result);
-      const modified = { ...StatusHeadFixture, complete: true };
-      const { pkg, env, version, complete } = modified;
-      await StatusHead.update({ pkg, env, version, complete });
-      const result2 = await StatusHead.findOne({ pkg, env, version });
-      assertStatus(result2, modified);
-      await StatusHead.remove(modified);
     });
   });
 
