@@ -16,12 +16,31 @@ class CounterWrap extends Wrap {
    * @param {String} params.env Env for Counter table
    * @param {String} params.pkg Pkg for Counter table
    * @param {String} params.version Version for counter table
+   * @param {Number} amount Number to increment
    * @returns {Promise} when operation complete
    * @public
    */
-  async increment(params) {
+  async increment(params, amount = 1) {
     const client = await this._getConnection();
-    const query = `UPDATE status_counter SET count=count+1 WHERE pkg=:pkg AND env=:env AND version=:version`;
+    const query = `UPDATE status_counter SET count=count+${amount} WHERE pkg=:pkg AND env=:env AND version=:version`;
+    return client.execute(query, params, { prepare: true, counter: true });
+  }
+  /**
+   * Decrement the given counter for this table in the manual way with the
+   * cassandra driver until we put this into datastar in a proper way
+   *
+   * @function increment
+   * @param {Object} params Parameters for performing increment
+   * @param {String} params.env Env for Counter table
+   * @param {String} params.pkg Pkg for Counter table
+   * @param {String} params.version Version for counter table
+   * @param {Number} amount Number to increment
+   * @returns {Promise} when operation complete
+   * @public
+   */
+  async decrement(params, amount = 1) {
+    const client = await this._getConnection();
+    const query = `UPDATE status_counter SET count=count-${amount} WHERE pkg=:pkg AND env=:env AND version=:version`;
     return client.execute(query, params, { prepare: true, counter: true });
   }
 }

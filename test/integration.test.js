@@ -196,5 +196,17 @@ describe('warehouse.ai-status-models (integration)', function () {
       const result2 = await StatusCounter.findOne(StatusCounterFixture);
       assume(result2.count).equals(3);
     });
+
+    it('should decrement counter after increment and validate the changes', async function () {
+      await StatusCounter.increment(StatusCounterFixture);
+      const result = await StatusCounter.findOne(StatusCounterFixture);
+      assume(result.count).equals(1);
+      await StatusCounter.increment(StatusCounterFixture);
+      const result1 = await StatusCounter.findOne(StatusCounterFixture);
+      assume(result1.count).equals(2);
+      await StatusCounter.decrement(StatusCounterFixture, 2);
+      const result2 = await StatusCounter.findOne(StatusCounterFixture);
+      assume(result2.count).equals(0);
+    });
   });
 });
