@@ -19,8 +19,8 @@ module.exports = function status(datastar) {
       previous_version: cql.text(),
       total: cql.int(),
       error: cql.boolean(),
-      create_date: cql.timestamp(),
-      update_date: cql.timestamp(),
+      create_date: cql.timestamp({ default: 'create' }),
+      update_date: cql.timestamp({ default: 'update' }),
       complete: cql.boolean()
     }).partitionKey(['pkg', 'env', 'version']),
     with: {
