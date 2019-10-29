@@ -1,3 +1,6 @@
+const Dynastar = require('dynastar');
+const Joi = require('joi');
+
 const Wrap = require('./wrap');
 
 /**
@@ -46,7 +49,7 @@ class CounterWrap extends Wrap {
 }
 
 /**
- * Returns the wrapped Datastar model for status_counter
+ * The Wrapped DynamoDB model for status_counter
  * This model is used for counting the completions of each locale for a given
  * build so we can track overall progress
  *
@@ -55,23 +58,20 @@ class CounterWrap extends Wrap {
  * @returns {CounterWrap} model for StatusCounter
  * @private
  */
-module.exports = function statcount(datastar) {
-  const cql = datastar.schema.cql;
-  const StatusCounter = datastar.define('status_counter', {
-    schema: datastar.schema.object({
-      pkg: cql.text(),
-      env: cql.text(),
-      version: cql.text(),
-      count: cql.counter()
-    }).partitionKey(['pkg', 'env', 'version']),
-    with: {
-      compaction: {
-        class: 'LeveledCompactionStrategy'
-      }
+module.exports = function statcount(dynamo) {
+  const hashKey = 'key';
+  const model = dynamo.define('status_counter', {
+    hashKey,
+    tableName: 'status_counter',
+    schema: {
+      key: Joi.string(),
+      pkg: Joi.string(),
+      env: Joi.string(),
+      version: Joi.string(),
+      count: Joi.number()
     }
   });
-
-  return new CounterWrap(StatusCounter);
+  return new CounterWrap(new Dynastar({ model, hashKey }));
 };
 
 module.exports.CounterWrap = CounterWrap;

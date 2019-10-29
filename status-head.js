@@ -1,31 +1,27 @@
+const Dynastar = require('dynastar');
+const Joi = require('joi');
+
 const Wrap = require('./wrap');
 
 /**
- * Returns a wrapped StatusHead model which is used for storing the latest
+ * A DynamoDB model which is used for storing the latest
  * status for a given pkg, env without needing to specify the version
- *
- * @function stathead
- * @param {Datastar} datastar Datastar instance
- * @returns {Wrap} StatusHead
  */
-module.exports = function stathead(datastar) {
-  const cql = datastar.schema.cql;
-  const StatusHead = datastar.define('status_head', {
-    schema: datastar.schema.object({
-      pkg: cql.text(),
-      env: cql.text(),
-      version: cql.text(),
-      previous_version: cql.text(),
-      total: cql.int(),
-      create_date: cql.timestamp({ default: 'create' }),
-      update_date: cql.timestamp({ default: 'update' })
-    }).partitionKey(['pkg', 'env']),
-    with: {
-      compaction: {
-        class: 'LeveledCompactionStrategy'
-      }
+module.exports = function statushead(dynamo) {
+  const hashKey = 'key';
+  const model = dynamo.define('status_head', {
+    hashKey,
+    tableName: 'status_head',
+    schema: {
+      key: Joi.string(),
+      pkg: Joi.string(),
+      env: Joi.string(),
+      version: Joi.string(),
+      previousVersion: Joi.string(),
+      total: Joi.number(),
+      createDate: Joi.date(),
+      updateDate: Joi.date()
     }
   });
-
-  return new Wrap(StatusHead);
+  return new Wrap(new Dynastar({ model, hashKey }));
 };

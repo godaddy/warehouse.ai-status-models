@@ -2,6 +2,7 @@ const uuid = require('uuid');
 
 exports.StatusFixture = {
   pkg: 'my-package',
+  key: 'my-package!dev!1.0.0',
   env: 'dev',
   version: '1.0.0',
   previousVersion: '0.9.0',
@@ -13,6 +14,7 @@ exports.StatusFixture = {
 };
 
 exports.StatusHeadFixture = {
+  key: 'my-package!dev',
   pkg: 'my-package',
   env: 'dev',
   version: '1.0.0',
@@ -23,12 +25,14 @@ exports.StatusHeadFixture = {
 };
 
 exports.StatusCounterFixture = {
+  key: 'my-package!dev!1.0.0',
   pkg: 'my-package',
   env: 'dev',
   version: '1.0.0'
 };
 
 exports.StatusEventFixture = {
+  key: 'my-package!dev!1.0.0',
   pkg: 'my-package',
   env: 'dev',
   version: '1.0.0',

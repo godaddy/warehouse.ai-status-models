@@ -1,16 +1,13 @@
-const thenify = require('tinythen');
-const Datastar = require('datastar');
+const AWS = require('aws-sdk');
+const dynamoObjectModel = require('dynamodb');
 const assume = require('assume');
-const statusModels = require('..');
 const uuid = require('uuid');
 
 const { StatusFixture,
   StatusHeadFixture,
   StatusCounterFixture,
   StatusEventFixture } = require('./fixtures');
-
-const datastar = new Datastar(require('./config'));
-const models = statusModels(datastar);
+const models = require('..')();
 
 const { Status, StatusHead, StatusCounter, StatusEvent } = models;
 
@@ -47,19 +44,19 @@ function thenStream(stream) {
     }
   };
 }
-describe('warehouse.ai-status-models (integration)', function () {
-  this.timeout(6E4);
-  before(async function () {
-    if (process.env.DEBUG) { // eslint-disable-line no-process-env
-      datastar.connection.on('queryStarted', function () {
-        console.log.apply(console, arguments); // eslint-disable-line no-console
-      });
-    }
-    await thenify(datastar, 'connect');
-  });
 
-  after(async function () {
-    await thenify(datastar, 'close');
+const dynamoEndpoint = process.env.DYNAMO_ENDPOINT;
+const dynamoRegion = process.env.AWS_REGION || 'us-west-2';
+
+describe('warehouse.ai-status-models (integration)', function () {
+
+  beforeEach(async () => {
+    const dynamoClient = new AWS.DynamoDB({
+      apiVersion: process.env.DYNAMO_API_VERSION || '2012-08-10',
+      endpoint: dynamoEndpoint,
+      region: dynamoRegion
+    });
+    dynamoObjectModel.dynamoDriver(dynamoClient);
   });
 
   describe('models', function () {

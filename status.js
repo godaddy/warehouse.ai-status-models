@@ -1,34 +1,30 @@
+const Dynastar = require('dynastar');
+const Joi = require('joi');
+
 const Wrap = require('./wrap');
 
 /**
- * Returns wrapped Status model that is used for storing the general status for
+ * A dynamo model that is used for storing the general status for
  * a given pkg, env, version. This is used for computing progress in
  * conjunction with StatusCounter using the `total` field
- *
- * @function status
- * @param {Datastar} datastar Datastar instance
- * @returns {Wrap} Status
  */
-module.exports = function status(datastar) {
-  const cql = datastar.schema.cql;
-  const Status = datastar.define('status', {
-    schema: datastar.schema.object({
-      pkg: cql.text(),
-      env: cql.text(),
-      version: cql.text(),
-      previous_version: cql.text(),
-      total: cql.int(),
-      error: cql.boolean(),
-      create_date: cql.timestamp({ default: 'create' }),
-      update_date: cql.timestamp({ default: 'update' }),
-      complete: cql.boolean()
-    }).partitionKey(['pkg', 'env', 'version']),
-    with: {
-      compaction: {
-        class: 'TimeWindowCompactionStrategy'
-      }
+module.exports = function status(dynamo) {
+  const hashKey = 'key';
+  const model = dynamo.define('status', {
+    hashKey,
+    tableName: 'status',
+    schema: {
+      key: Joi.string(),
+      pkg: Joi.string(),
+      env: Joi.string(),
+      version: Joi.string(),
+      previousVersion: Joi.string(),
+      total: Joi.number(),
+      error: Joi.boolean(),
+      createDate: Joi.date(),
+      updateDate: Joi.date(),
+      complete: Joi.boolean()
     }
   });
-
-  return new Wrap(Status);
+  return new Wrap(new Dynastar({ model, hashKey }));
 };

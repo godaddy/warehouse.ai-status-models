@@ -4,9 +4,10 @@
   "description": "models for warehouse.ai-status-api",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha test/*.test.js",
+    "localstack": "docker run -it -p 4569:4569 --rm localstack/localstack:0.8.6",
+    "test": "DYNAMO_ENDPOINT=http://localhost:4569 nyc mocha test/*.test.js --timeout 100000",
     "lint": "eslint-godaddy *.js test/*.js",
-    "pretest": "npm run lint"
+    "posttest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,9 @@
     "uuid": "^3.3.2"
   },
   "dependencies": {
+    "dynamodb": "^1.2.1",
+    "dynastar": "^1.0.0",
+    "joi": "^14.3.1",
     "tinythen": "^1.0.1"
   }
 }

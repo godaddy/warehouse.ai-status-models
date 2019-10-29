@@ -1,3 +1,4 @@
+const dynamodb = require('dynamodb');
 
 /**
  * StatusModels class which contains all the initialized models wrapped with
@@ -8,15 +9,12 @@
 class StatusModels {
   /**
    * Set the models on the instance
-   *
-   * @param {Datastar} datastar Datastar instance
-   * @constructor
    */
-  constructor(datastar) {
-    this.Status = require('./status')(datastar, this);
-    this.StatusHead = require('./status-head')(datastar, this);
-    this.StatusEvent = require('./status-event')(datastar, this);
-    this.StatusCounter = require('./status-counter')(datastar, this);
+  constructor() {
+    this.Status = require('./status')(dynamodb);
+    this.StatusHead = require('./status-head')(dynamodb);
+    this.StatusEvent = require('./status-event')(dynamodb);
+    this.StatusCounter = require('./status-counter')(dynamodb);
   }
 
   /**
@@ -55,6 +53,6 @@ class StatusModels {
  * @param {Datastar} datastar Datastar instance
  * @returns {StatusModels} to be used
  */
-module.exports = function models(datastar) {
-  return new StatusModels(datastar);
+module.exports = function models() {
+  return new StatusModels();
 };
