@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "localstack": "docker run -it -p 4569:4569 --rm localstack/localstack:0.8.6",
-    "test": "DYNAMO_ENDPOINT=http://localhost:4569 nyc mocha test/*.test.js --timeout 100000",
+    "test": "DYNAMO_ENDPOINT= nyc mocha test/*.test.js",
     "lint": "eslint-godaddy *.js test/*.js",
-    "posttest": "npm run lint"
+    "pretest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -15,7 +15,8 @@
   },
   "keywords": [
     "warehouse.ai-status-api",
-    "datastar",
+    "dynastar",
+    "dynamo",
     "warehouse.ai"
   ],
   "author": "GoDaddy.com Operating Company, LLC",
@@ -26,8 +27,8 @@
   "homepage": "https://github.com/warehouseai/warehouse.ai-status-models#readme",
   "devDependencies": {
     "assume": "^2.2.0",
-    "datastar": "^1.7.0",
-    "datastar-test-tools": "^1.0.0",
+    "aws-sdk": "^2.559.0",
+    "dynamodb": "^1.2.1",
     "eslint": "^5.16.0",
     "eslint-config-godaddy": "^3.0.0",
     "eslint-plugin-json": "^1.4.0",
@@ -37,8 +38,6 @@
     "uuid": "^3.3.2"
   },
   "dependencies": {
-    "dynamodb": "^1.2.1",
-    "dynastar": "^1.0.0",
     "joi": "^14.3.1",
     "tinythen": "^1.0.1"
   }

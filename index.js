@@ -1,5 +1,3 @@
-const dynamodb = require('dynamodb');
-
 /**
  * StatusModels class which contains all the initialized models wrapped with
  * thenable wrappers for use in our application
@@ -9,8 +7,11 @@ const dynamodb = require('dynamodb');
 class StatusModels {
   /**
    * Set the models on the instance
+   *
+   * @param {Object} dynamodb Dyanmo object model
+   * @constructor
    */
-  constructor() {
+  constructor(dynamodb) {
     this.Status = require('./status')(dynamodb);
     this.StatusHead = require('./status-head')(dynamodb);
     this.StatusEvent = require('./status-event')(dynamodb);
@@ -50,9 +51,9 @@ class StatusModels {
  * Simple Factory function for main export
  *
  * @function models
- * @param {Datastar} datastar Datastar instance
- * @returns {StatusModels} to be used
+ * @param {Object} dynamodb Dyanmo object model
+ * @returns {StatusModels} warehouse status models
  */
-module.exports = function models() {
-  return new StatusModels();
+module.exports = function models(dynamodb) {
+  return new StatusModels(dynamodb);
 };

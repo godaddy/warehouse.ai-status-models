@@ -7,7 +7,20 @@ const { StatusFixture,
   StatusHeadFixture,
   StatusCounterFixture,
   StatusEventFixture } = require('./fixtures');
-const models = require('..')();
+
+/* eslint-disable no-process-env */
+const dynamoEndpoint = process.env.DYNAMO_ENDPOINT || 'http://localhost:4569';
+const dynamoRegion = process.env.AWS_REGION || 'us-west-2';
+const dynamoApiVersion = process.env.DYNAMO_API_VERSION || '2012-08-10';
+/* eslint-enable no-process-env */
+
+const dynamoClient = new AWS.DynamoDB({
+  apiVersion: dynamoApiVersion,
+  endpoint: dynamoEndpoint,
+  region: dynamoRegion
+});
+dynamoObjectModel.dynamoDriver(dynamoClient);
+const models = require('..')(dynamoObjectModel);
 
 const { Status, StatusHead, StatusCounter, StatusEvent } = models;
 
@@ -17,8 +30,8 @@ function assertStatus(result, fixture = StatusFixture) {
   assume(result.version).equals(fixture.version);
   assume(result.previousVersion).equals(fixture.previousVersion);
   assume(result.total).equals(fixture.total);
-  assume(result.createDate).is.a('date');
-  assume(result.updateDate).is.a('date');
+  assume(Date.parse(result.createDate)).is.truthy();
+  assume(Date.parse(result.updateDate)).is.truthy();
   if (result.complete) assume(result.complete).equals(fixture.complete);
 }
 
@@ -30,7 +43,7 @@ function assertEvent(result, fixture = StatusEventFixture) {
   assume(result.error).equals(fixture.error);
   assume(result.message).equals(fixture.message);
   assume(result.details).equals(fixture.details);
-  assume(result.createDate).is.a('date');
+  assume(Date.parse(result.createDate)).is.truthy();
   assume(result.eventId).equals(fixture.eventId);
 }
 
@@ -45,20 +58,7 @@ function thenStream(stream) {
   };
 }
 
-const dynamoEndpoint = process.env.DYNAMO_ENDPOINT;
-const dynamoRegion = process.env.AWS_REGION || 'us-west-2';
-
 describe('warehouse.ai-status-models (integration)', function () {
-
-  beforeEach(async () => {
-    const dynamoClient = new AWS.DynamoDB({
-      apiVersion: process.env.DYNAMO_API_VERSION || '2012-08-10',
-      endpoint: dynamoEndpoint,
-      region: dynamoRegion
-    });
-    dynamoObjectModel.dynamoDriver(dynamoClient);
-  });
-
   describe('models', function () {
     it('should ensure and drop all models', async function () {
       await models.ensure();
@@ -88,15 +88,14 @@ describe('warehouse.ai-status-models (integration)', function () {
     });
 
     it('should create, find, update and remove a status record', async function () {
+      const key = StatusFixture.key;
       await Status.create(StatusFixture);
       const result = await Status.findOne(StatusFixture);
       assertStatus(result);
-      const modified = { ...StatusFixture, complete: true };
-      const { pkg, env, version, complete } = modified;
-      await Status.update({ pkg, env, version, complete });
-      const result2 = await Status.findOne({ pkg, env, version });
-      assertStatus(result2, modified);
-      await Status.remove(modified);
+      await Status.update({ key, complete: true });
+      const result2 = await Status.findOne({ key });
+      assertStatus(result2, { ...StatusFixture, complete: true });
+      await Status.remove({ key });
     });
   });
 

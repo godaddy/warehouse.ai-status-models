@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/warehouseai/warehouse.ai-status-models.svg?branch=master)](https://travis-ci.org/warehouseai/warehouse.ai-status-models)
 [![Dependencies](https://img.shields.io/david/warehouseai/warehouse.ai-status-models.svg?style=flat-square)](https://github.com/warehouseai/warehouse.ai-status-models/blob/master/package.json)
 
-[Datastar][datastar] models for the [Warehouse.ai-status-api].
+[Datastar][dynastar] models for the [Warehouse.ai-status-api].
 
 ## Install
 
@@ -17,10 +17,12 @@ npm install warehouse.ai-status-models --save
 ## Usage
 
 ```
-const datastar = require('datastar')({ /* connection config */ }).connect();
-const models = require('warehouse.ai-status-models')(datastar);
+const dynamoClient = new AWS.DynamoDB({ /* connection config */ });
+const dynamodb = require('dynamodb');
+dynamodb.dynamoDriver(dynamoClient);
+const models = require('warehouse.ai-status-models')(dynamodb);
 
-// from datastar.define we get...
+// from dynastar.define we get...
 const Status = models.Status;
 
 Status.findFirst({ ... }, function (err, data) { .... });
@@ -29,7 +31,7 @@ Status.findFirst({ ... }, function (err, data) { .... });
 ## API
 
 All schemas for the API documentation are written using
-[`datastar`'s][datastar] notation.
+[Joi][joi] notation.
 
 ### Schemas
 
@@ -39,11 +41,11 @@ Generic status information
 
 Column             | Type             | Summary
 ------------------ | ---------------- | ------------
-pkg (pk)           | text             | Name of a package
-env (pk)           | text             | What enviroment is this build made for (dev, test, etc.)
-version (pk)       | text             | What version of a package does this status represent
-previous_version   | text             | The previous version number
-total              | integer          | Total progress as percentage
+pkg (pk)           | string           | Name of a package
+env (pk)           | string           | What environment is this build made for (dev, test, etc.)
+version (pk)       | string           | What version of a package does this status represent
+previous_version   | string           | The previous version number
+total              | number           | Total progress as percentage
 error              | boolean          | Did the build error
 create_date        | timestamp        | Time of creation
 update_date        | timestamp        | Time of last update
@@ -63,15 +65,15 @@ error or not.
 
 Column             | Type             | Summary
 ------------------ | ---------------- | ------------
-pkg (pk)           | text             | Name of a package
-env (pk)           | text             | What enviroment is this build made for (dev, test, etc.)
-version (pk)       | text             | What version of a package does this status represent
-locale             | text             | Build locale
+pkg (pk)           | string           | Name of a package
+env (pk)           | string           | What environment is this build made for (dev, test, etc.)
+version (pk)       | string           | What version of a package does this status represent
+locale             | string           | Build locale
 error              | boolean          | Is the status event an error
-message            | text             | Status message
-details            | text             | Message details
+message            | string           | Status message
+details            | string           | Message details
 create_date        | timestamp        | Time of creation
-event_id           | unqiue_timestamp | Unique id sortable by time
+event_id           | string (timeUUID)| Unique id sortable by time
 
 ### StatusCounter (`status_counter`)
 
@@ -80,20 +82,25 @@ has completed in order to compute progress based on total amount of `locales`.
 
 Column             | Type             | Summary
 ------------------ | ---------------- | ------------
-pkg (pk)           | text             | Name of a package
-env (pk)           | text             | What enviroment is this build made for (dev, test, etc.)
-version (pk)       | text             | What version of a package does this status represent
+pkg (pk)           | string           | Name of a package
+env (pk)           | string           | What environment is this build made for (dev, test, etc.)
+version (pk)       | string           | What version of a package does this status represent
 count              | counter          | Incrementable counter
 
 ## Test
 
-Running tests assumes you have java installed and a local [cassandra] installed
-and running for your given operating system. Once that is complete, just run:
+Before running tests, spin up an instance of localstack by running
+
+```sh
+npm run localstack
+```
+
+Then run:
 
 ```sh
 npm test
 ```
 
-[datastar]: https://github.com/godaddy/datastar
+[dynastar]: https://github.com/godaddy/dynastar
 [Warehouse.ai-status-api]: https://github.com/godaddy/warehouse.ai-status-api
-[cassandra]: https://cassandra.apache.org/
+[joi]: https://github.com/hapijs/joi

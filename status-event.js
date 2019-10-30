@@ -4,11 +4,11 @@ const Joi = require('joi');
 const Wrap = require('./wrap');
 
 /**
- * A DynamoDB model used for storing each event for the
+ * Returns a Wrapped Dynastar model used for storing each event for the
  * various stages of a build process within the warehouse system.
  *
  * @function statevent
- * @param {Datastar} datastar Datastar instance
+ * @param {Object} dynamo Dynamo object model
  * @returns {Wrap} StatusEvent
  */
 module.exports = function statevent(dynamo) {
@@ -17,6 +17,9 @@ module.exports = function statevent(dynamo) {
   const model = dynamo.define('status_event', {
     hashKey,
     rangeKey,
+    timestamps: true,
+    createdAt: 'createDate',
+    updatedAt: false,
     tableName: 'status_event',
     schema: {
       key: Joi.string(),
@@ -27,8 +30,7 @@ module.exports = function statevent(dynamo) {
       error: Joi.boolean(),
       message: Joi.string(),
       details: Joi.string(),
-      createDate: Joi.date(),
-      eventId: dynamo.types.uuid()
+      eventId: dynamo.types.timeUUID()
     }
   });
   return new Wrap(new Dynastar({ model, hashKey, rangeKey }));
