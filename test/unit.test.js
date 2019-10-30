@@ -18,5 +18,6 @@ describe('warehouse.ai-status-models (unit)', function () {
 
   it('StatusCounter model should have increment and decrement function', function () {
     assume(models.StatusCounter.increment).is.an('asyncfunction');
+    assume(models.StatusCounter.decrement).is.an('asyncfunction');
   });
 });
