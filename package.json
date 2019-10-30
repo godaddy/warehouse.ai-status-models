@@ -4,8 +4,8 @@
   "description": "models for warehouse.ai-status-api",
   "main": "index.js",
   "scripts": {
-    "localstack": "AWS_ACCESS_KEY_ID=fakeid AWS_SECRET_ACCESS_KEY=fakekey docker run -it -p 4569:4569 --rm localstack/localstack:0.8.6",
-    "test": "DYNAMO_ENDPOINT= nyc mocha test/*.test.js",
+    "localstack": "docker run -it -p 4569:4569 --rm localstack/localstack:0.8.6",
+    "test": "DYNAMO_ENDPOINT= nyc mocha test/*.test.js --timeout 10000",
     "lint": "eslint-godaddy *.js test/*.js",
     "pretest": "npm run lint"
   },
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/warehouseai/warehouse.ai-status-models#readme",
   "devDependencies": {
     "assume": "^2.2.0",
+    "aws-liveness": "^1.1.0",
     "aws-sdk": "^2.559.0",
     "dynamodb": "^1.2.1",
     "eslint": "^5.16.0",
