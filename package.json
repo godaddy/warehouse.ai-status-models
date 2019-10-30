@@ -38,6 +38,7 @@
     "uuid": "^3.3.2"
   },
   "dependencies": {
+    "dynastar": "^1.0.0",
     "joi": "^14.3.1",
     "tinythen": "^1.0.1"
   }
