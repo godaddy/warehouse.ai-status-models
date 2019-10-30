@@ -4,7 +4,7 @@
   "description": "models for warehouse.ai-status-api",
   "main": "index.js",
   "scripts": {
-    "localstack": "docker run -it -p 4569:4569 --rm localstack/localstack:0.8.6",
+    "localstack": "AWS_ACCESS_KEY_ID=fakeid AWS_SECRET_ACCESS_KEY=fakekey docker run -it -p 4569:4569 --rm localstack/localstack:0.8.6",
     "test": "DYNAMO_ENDPOINT= nyc mocha test/*.test.js",
     "lint": "eslint-godaddy *.js test/*.js",
     "pretest": "npm run lint"
