@@ -14,6 +14,10 @@ const Wrap = require('./wrap');
  */
 module.exports = function status(dynamo) {
   const hashKey = 'key';
+  
+  const createKey = (data) => {
+    return `${data.pkg}!${data.env}!${data.version}`;
+  };
   const model = dynamo.define('status', {
     hashKey,
     timestamps: true,
