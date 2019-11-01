@@ -13,20 +13,21 @@ const Wrap = require('./wrap');
  */
 module.exports = function statushead(dynamo) {
   const hashKey = 'key';
+  const createKey = (data) => {
+    return `${data.pkg}!${data.env}!${data.version}`;
+  };
   const model = dynamo.define('StatusHead', {
     hashKey,
     timestamps: true,
-    tableName: 'status_head',
+    tableName: 'WhrsStatusHead',
     schema: {
       key: Joi.string(),
       pkg: Joi.string(),
       env: Joi.string(),
       version: Joi.string(),
       previousVersion: Joi.string(),
-      total: Joi.number(),
-      createDate: Joi.date(),
-      updateDate: Joi.date()
+      total: Joi.number()
     }
   });
-  return new Wrap(new Dynastar({ model, hashKey }));
+  return new Wrap(new Dynastar({ model, hashKey, createKey }));
 };

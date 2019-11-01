@@ -14,12 +14,15 @@ const Wrap = require('./wrap');
 module.exports = function statevent(dynamo) {
   const hashKey = 'key';
   const rangeKey = 'eventId';
-  const model = dynamo.define('status_event', {
+  const createKey = (data) => {
+    return `${data.pkg}!${data.env}!${data.version}`;
+  };
+  const model = dynamo.define('StatusEvent', {
     hashKey,
     rangeKey,
     timestamps: true,
     updatedAt: false,
-    tableName: 'status_event',
+    tableName: 'WrhsStatusEvent',
     schema: {
       key: Joi.string(),
       pkg: Joi.string(),
@@ -32,5 +35,5 @@ module.exports = function statevent(dynamo) {
       eventId: dynamo.types.timeUUID()
     }
   });
-  return new Wrap(new Dynastar({ model, hashKey, rangeKey }));
+  return new Wrap(new Dynastar({ model, hashKey, rangeKey, createKey }));
 };

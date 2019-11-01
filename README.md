@@ -25,7 +25,7 @@ const models = require('warehouse.ai-status-models')(dynamodb);
 // from dynastar.define we get...
 const Status = models.Status;
 
-Status.findFirst({ ... }, function (err, data) { .... });
+Status.findOne({ ... }).then(res => { ... }).catch(err => { ... });
 ```
 
 ## API
@@ -35,7 +35,7 @@ All schemas for the API documentation are written using
 
 ### Schemas
 
-### Status (`status`)
+### Status (`Status`)
 
 Generic status information
 
@@ -44,20 +44,20 @@ Column             | Type             | Summary
 pkg (pk)           | string           | Name of a package
 env (pk)           | string           | What environment is this build made for (dev, test, etc.)
 version (pk)       | string           | What version of a package does this status represent
-previous_version   | string           | The previous version number
+previousVersion    | string           | The previous version number
 total              | number           | Total progress as percentage
 error              | boolean          | Did the build error
 createdAt          | timestamp        | Time of creation
 updatedAt          | timestamp        | Time of last update
 complete           | boolean          | Did the build complete
 
-### StatusHead (`status_head`)
+### StatusHead (`StatusHead`)
 
 Generic status information but just for he  latest version for a given
 `pkg` and `env`. Refer to the table above for details. The properties
 `error` and `complete` do not exist on this table.
 
-### StatusEvent (`status_event`)
+### StatusEvent (`StatusEvent`)
 
 A detailed event for the various stages of a build process containing `message`
 and optional `details` properties as well as `locale` and whether it is and
@@ -75,7 +75,7 @@ details            | string           | Message details
 createdAt          | timestamp        | Time of creation
 eventId            | string (timeUUID)| Unique id sortable by time
 
-### StatusCounter (`status_counter`)
+### StatusCounter (`StatusCounter`)
 
 A simple distributed counter model that is incremented when a `locale` build
 has completed in order to compute progress based on total amount of `locales`.

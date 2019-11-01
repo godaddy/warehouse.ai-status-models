@@ -35,8 +35,8 @@ function assertStatus(result, fixture = StatusFixture) {
   assume(result.version).equals(fixture.version);
   assume(result.previousVersion).equals(fixture.previousVersion);
   assume(result.total).equals(fixture.total);
-  assume(Date.parse(result.createDate)).is.truthy();
-  assume(Date.parse(result.updateDate)).is.truthy();
+  assume(Date.parse(result.createdAt)).is.truthy();
+  assume(Date.parse(result.updatedAt)).is.truthy();
   if (result.complete) assume(result.complete).equals(fixture.complete);
 }
 
@@ -48,7 +48,7 @@ function assertEvent(result, fixture = StatusEventFixture) {
   assume(result.error).equals(fixture.error);
   assume(result.message).equals(fixture.message);
   assume(result.details).equals(fixture.details);
-  assume(Date.parse(result.createDate)).is.truthy();
+  assume(Date.parse(result.createdAt)).is.truthy();
   assume(result.eventId).equals(fixture.eventId);
 }
 
@@ -101,14 +101,14 @@ describe('warehouse.ai-status-models (integration)', function () {
     });
 
     it('should create, find, update and remove a status record', async function () {
-      const key = StatusFixture.key;
+      const key = { pkg: StatusFixture.pkg, env: StatusFixture.env, version: StatusFixture.version };
       await Status.create(StatusFixture);
       const result = await Status.findOne(StatusFixture);
       assertStatus(result);
-      await Status.update({ key, complete: true });
-      const result2 = await Status.findOne({ key });
+      await Status.update({ ...key, complete: true });
+      const result2 = await Status.findOne({ ...key });
       assertStatus(result2, { ...StatusFixture, complete: true });
-      await Status.remove({ key });
+      await Status.remove({ ...key });
     });
   });
 

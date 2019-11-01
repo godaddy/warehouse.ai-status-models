@@ -50,9 +50,12 @@ class CounterWrap extends Wrap {
  */
 module.exports = function statcount(dynamo) {
   const hashKey = 'key';
-  const model = dynamo.define('status_counter', {
+  const createKey = (data) => {
+    return `${data.pkg}!${data.env}!${data.version}`;
+  };
+  const model = dynamo.define('StatusCounter', {
     hashKey,
-    tableName: 'status_counter',
+    tableName: 'WrhsStatusCounter',
     schema: {
       key: Joi.string(),
       pkg: Joi.string(),
@@ -61,7 +64,7 @@ module.exports = function statcount(dynamo) {
       count: Joi.number()
     }
   });
-  return new CounterWrap(new Dynastar({ model, hashKey }));
+  return new CounterWrap(new Dynastar({ model, hashKey, createKey }));
 };
 
 module.exports.CounterWrap = CounterWrap;
