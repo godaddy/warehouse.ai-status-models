@@ -13,7 +13,7 @@ const Wrap = require('./wrap');
  */
 module.exports = function statushead(dynamo) {
   const hashKey = 'key';
-  const model = dynamo.define('status_head', {
+  const model = dynamo.define('StatusHead', {
     hashKey,
     timestamps: true,
     tableName: 'status_head',
