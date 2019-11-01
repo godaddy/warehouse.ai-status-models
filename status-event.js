@@ -18,7 +18,6 @@ module.exports = function statevent(dynamo) {
     hashKey,
     rangeKey,
     timestamps: true,
-    createdAt: 'createDate',
     updatedAt: false,
     tableName: 'status_event',
     schema: {

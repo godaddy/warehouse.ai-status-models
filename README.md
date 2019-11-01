@@ -47,8 +47,8 @@ version (pk)       | string           | What version of a package does this stat
 previous_version   | string           | The previous version number
 total              | number           | Total progress as percentage
 error              | boolean          | Did the build error
-create_date        | timestamp        | Time of creation
-update_date        | timestamp        | Time of last update
+createdAt          | timestamp        | Time of creation
+updatedAt          | timestamp        | Time of last update
 complete           | boolean          | Did the build complete
 
 ### StatusHead (`status_head`)
@@ -72,8 +72,8 @@ locale             | string           | Build locale
 error              | boolean          | Is the status event an error
 message            | string           | Status message
 details            | string           | Message details
-create_date        | timestamp        | Time of creation
-event_id           | string (timeUUID)| Unique id sortable by time
+createdAt          | timestamp        | Time of creation
+eventId            | string (timeUUID)| Unique id sortable by time
 
 ### StatusCounter (`status_counter`)
 

@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const dynamoObjectModel = require('dynamodb');
+const dynamoObjectModel = require('dynamodb-x');
 const assume = require('assume');
 const uuid = require('uuid');
 const AwsLiveness = require('aws-liveness');

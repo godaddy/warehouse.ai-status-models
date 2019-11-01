@@ -1,6 +1,6 @@
 const assume = require('assume');
 const ModelWrap = require('../wrap');
-const dynamodb = require('dynamodb');
+const dynamodb = require('dynamodb-x');
 const models = require('..')(dynamodb);
 
 describe('warehouse.ai-status-models (unit)', function () {

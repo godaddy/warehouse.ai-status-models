@@ -16,8 +16,6 @@ module.exports = function statushead(dynamo) {
   const model = dynamo.define('status_head', {
     hashKey,
     timestamps: true,
-    createdAt: 'createDate',
-    updatedAt: 'updateDate',
     tableName: 'status_head',
     schema: {
       key: Joi.string(),
