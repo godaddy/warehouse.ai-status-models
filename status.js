@@ -33,5 +33,5 @@ module.exports = function status(dynamo) {
       complete: Joi.boolean()
     }
   });
-  return new Wrap(new Dynastar({ model, hashKey }));
+  return new Wrap(new Dynastar({ model, createKey, hashKey }));
 };
