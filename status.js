@@ -1,7 +1,5 @@
-const Dynastar = require('dynastar');
+const { AwaitWrap, Dynastar } = require('dynastar');
 const Joi = require('joi');
-
-const Wrap = require('./wrap');
 
 /**
  * Returns a Wrapped Dynastar model that is used for storing the general status for
@@ -10,7 +8,7 @@ const Wrap = require('./wrap');
  *
  * @function status
  * @param {Object} dynamo Dynamo object model
- * @returns {Wrap} Status
+ * @returns {AwaitWrap} Status
  */
 module.exports = function status(dynamo) {
   const hashKey = 'key';
@@ -32,5 +30,5 @@ module.exports = function status(dynamo) {
       complete: Joi.boolean()
     }
   });
-  return new Wrap(new Dynastar({ model, createKey, hashKey }));
+  return new AwaitWrap(new Dynastar({ model, createKey, hashKey }));
 };

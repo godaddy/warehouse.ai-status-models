@@ -29,6 +29,7 @@
     "assume": "^2.2.0",
     "aws-liveness": "^1.1.0",
     "aws-sdk": "^2.559.0",
+    "dynamodb-x": "^1.2.3",
     "eslint": "^5.16.0",
     "eslint-config-godaddy": "^3.0.0",
     "eslint-plugin-json": "^1.4.0",
@@ -38,7 +39,6 @@
     "uuid": "^3.3.2"
   },
   "dependencies": {
-    "dynamodb-x": "^1.2.3",
     "dynastar": "^1.0.0",
     "joi": "^14.3.1",
     "tinythen": "^1.0.1"

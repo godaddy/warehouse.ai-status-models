@@ -1,7 +1,5 @@
-const Dynastar = require('dynastar');
+const { AwaitWrap, Dynastar } = require('dynastar');
 const Joi = require('joi');
-
-const Wrap = require('./wrap');
 
 /**
  * Returns a Wrapped Dynastar model used for storing each event for the
@@ -9,7 +7,7 @@ const Wrap = require('./wrap');
  *
  * @function statevent
  * @param {Object} dynamo Dynamo object model
- * @returns {Wrap} StatusEvent
+ * @returns {AwaitWrap} StatusEvent
  */
 module.exports = function statevent(dynamo) {
   const hashKey = 'key';
@@ -35,5 +33,5 @@ module.exports = function statevent(dynamo) {
       eventId: dynamo.types.timeUUID()
     }
   });
-  return new Wrap(new Dynastar({ model, hashKey, rangeKey, createKey }));
+  return new AwaitWrap(new Dynastar({ model, hashKey, rangeKey, createKey }));
 };

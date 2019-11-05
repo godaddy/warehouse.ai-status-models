@@ -1,7 +1,5 @@
-const Dynastar = require('dynastar');
+const { AwaitWrap, Dynastar } = require('dynastar');
 const Joi = require('joi');
-
-const Wrap = require('./wrap');
 
 /**
  * Returns a wrapped Dynastar model which is used for storing the latest
@@ -9,7 +7,7 @@ const Wrap = require('./wrap');
  *
  * @function statushead
  * @param {Object} dynamo Dynamo object model
- * @returns {Wrap} StatusHead
+ * @returns {AwaitWrap} StatusHead
  */
 module.exports = function statushead(dynamo) {
   const hashKey = 'key';
@@ -29,5 +27,5 @@ module.exports = function statushead(dynamo) {
       total: Joi.number()
     }
   });
-  return new Wrap(new Dynastar({ model, hashKey, createKey }));
+  return new AwaitWrap(new Dynastar({ model, hashKey, createKey }));
 };

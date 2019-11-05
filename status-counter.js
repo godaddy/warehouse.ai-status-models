@@ -1,15 +1,14 @@
-const Dynastar = require('dynastar');
+const { AwaitWrap, Dynastar } = require('dynastar');
 const Joi = require('joi');
 
-const Wrap = require('./wrap');
 
 /**
- * Extends the Wrap class to add an increment function in order to do the
+ * Extends the AwaitWrap class to add an increment function in order to do the
  * single operation it permits
  *
  * @class CounterWrap
  */
-class CounterWrap extends Wrap {
+class CounterWrap extends AwaitWrap {
   /**
    * Increment the given counter for this table in the manual way with the
    * cassandra driver until we put this into datastar in a proper way
