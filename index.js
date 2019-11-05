@@ -1,4 +1,3 @@
-
 /**
  * StatusModels class which contains all the initialized models wrapped with
  * thenable wrappers for use in our application
@@ -9,14 +8,14 @@ class StatusModels {
   /**
    * Set the models on the instance
    *
-   * @param {Datastar} datastar Datastar instance
+   * @param {Object} dynamodb Dyanmo object model
    * @constructor
    */
-  constructor(datastar) {
-    this.Status = require('./status')(datastar, this);
-    this.StatusHead = require('./status-head')(datastar, this);
-    this.StatusEvent = require('./status-event')(datastar, this);
-    this.StatusCounter = require('./status-counter')(datastar, this);
+  constructor(dynamodb) {
+    this.Status = require('./status')(dynamodb);
+    this.StatusHead = require('./status-head')(dynamodb);
+    this.StatusEvent = require('./status-event')(dynamodb);
+    this.StatusCounter = require('./status-counter')(dynamodb);
   }
 
   /**
@@ -52,9 +51,9 @@ class StatusModels {
  * Simple Factory function for main export
  *
  * @function models
- * @param {Datastar} datastar Datastar instance
- * @returns {StatusModels} to be used
+ * @param {Object} dynamodb Dyanmo object model
+ * @returns {StatusModels} warehouse status models
  */
-module.exports = function models(datastar) {
-  return new StatusModels(datastar);
+module.exports = function models(dynamodb) {
+  return new StatusModels(dynamodb);
 };

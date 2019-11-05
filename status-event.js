@@ -1,34 +1,37 @@
-const Wrap = require('./wrap');
+const { AwaitWrap, Dynastar } = require('dynastar');
+const Joi = require('joi');
 
 /**
- * Returns the wrapped status event model used for storing each event for the
+ * Returns a Wrapped Dynastar model used for storing each event for the
  * various stages of a build process within the warehouse system.
  *
  * @function statevent
- * @param {Datastar} datastar Datastar instance
- * @returns {Wrap} StatusEvent
+ * @param {Object} dynamo Dynamo object model
+ * @returns {AwaitWrap} StatusEvent
  */
-module.exports = function statevent(datastar) {
-  const cql = datastar.schema.cql;
-  const StatusEvent = datastar.define('status_event', {
-    schema: datastar.schema.object({
-      pkg: cql.text(),
-      env: cql.text(),
-      version: cql.text(),
-      locale: cql.text(),
-      error: cql.boolean(),
-      message: cql.text(),
-      details: cql.text(),
-      create_date: cql.timestamp({ default: 'create' }),
-      event_id: cql.timeuuid()
-    }).partitionKey(['pkg', 'env', 'version'])
-      .clusteringKey('event_id'),
-    with: {
-      compaction: {
-        class: 'TimeWindowCompactionStrategy'
-      }
+module.exports = function statevent(dynamo) {
+  const hashKey = 'key';
+  const rangeKey = 'eventId';
+  const createKey = (data) => {
+    return `${data.pkg}!${data.env}!${data.version}`;
+  };
+  const model = dynamo.define('StatusEvent', {
+    hashKey,
+    rangeKey,
+    timestamps: true,
+    updatedAt: false,
+    tableName: 'WrhsStatusEvent',
+    schema: {
+      key: Joi.string(),
+      pkg: Joi.string(),
+      env: Joi.string(),
+      version: Joi.string(),
+      locale: Joi.string(),
+      error: Joi.boolean(),
+      message: Joi.string(),
+      details: Joi.string(),
+      eventId: dynamo.types.timeUUID()
     }
   });
-
-  return new Wrap(StatusEvent);
+  return new AwaitWrap(new Dynastar({ model, hashKey, rangeKey, createKey }));
 };

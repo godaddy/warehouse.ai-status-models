@@ -1,16 +1,31 @@
-const thenify = require('tinythen');
-const Datastar = require('datastar');
+const AWS = require('aws-sdk');
+const dynamoObjectModel = require('dynamodb-x');
 const assume = require('assume');
-const statusModels = require('..');
 const uuid = require('uuid');
+const AwsLiveness = require('aws-liveness');
+const modelsFactory = require('..');
 
 const { StatusFixture,
   StatusHeadFixture,
   StatusCounterFixture,
   StatusEventFixture } = require('./fixtures');
 
-const datastar = new Datastar(require('./config'));
-const models = statusModels(datastar);
+/* eslint-disable no-process-env */
+const dynamoEndpoint = process.env.DYNAMO_ENDPOINT || 'http://localhost:4569';
+const dynamoRegion = process.env.AWS_REGION || 'us-west-2';
+const dynamoApiVersion = process.env.DYNAMO_API_VERSION || '2012-08-10';
+// Need to set some values for these so localstack works in Travis
+process.env.AWS_ACCESS_KEY_ID = 'foobar';
+process.env.AWS_SECRET_ACCESS_KEY = 'foobar';
+/* eslint-enable no-process-env */
+
+const dynamoClient = new AWS.DynamoDB({
+  apiVersion: dynamoApiVersion,
+  endpoint: dynamoEndpoint,
+  region: dynamoRegion
+});
+dynamoObjectModel.dynamoDriver(dynamoClient);
+const models = modelsFactory(dynamoObjectModel);
 
 const { Status, StatusHead, StatusCounter, StatusEvent } = models;
 
@@ -20,8 +35,8 @@ function assertStatus(result, fixture = StatusFixture) {
   assume(result.version).equals(fixture.version);
   assume(result.previousVersion).equals(fixture.previousVersion);
   assume(result.total).equals(fixture.total);
-  assume(result.createDate).is.a('date');
-  assume(result.updateDate).is.a('date');
+  assume(Date.parse(result.createdAt)).is.truthy();
+  assume(Date.parse(result.updatedAt)).is.truthy();
   if (result.complete) assume(result.complete).equals(fixture.complete);
 }
 
@@ -33,7 +48,7 @@ function assertEvent(result, fixture = StatusEventFixture) {
   assume(result.error).equals(fixture.error);
   assume(result.message).equals(fixture.message);
   assume(result.details).equals(fixture.details);
-  assume(result.createDate).is.a('date');
+  assume(Date.parse(result.createdAt)).is.truthy();
   assume(result.eventId).equals(fixture.eventId);
 }
 
@@ -47,19 +62,14 @@ function thenStream(stream) {
     }
   };
 }
-describe('warehouse.ai-status-models (integration)', function () {
-  this.timeout(6E4);
-  before(async function () {
-    if (process.env.DEBUG) { // eslint-disable-line no-process-env
-      datastar.connection.on('queryStarted', function () {
-        console.log.apply(console, arguments); // eslint-disable-line no-console
-      });
-    }
-    await thenify(datastar, 'connect');
-  });
 
-  after(async function () {
-    await thenify(datastar, 'close');
+describe('warehouse.ai-status-models (integration)', function () {
+  before(async function () {
+    const liveness = new AwsLiveness();
+    await liveness.waitForServices({
+      clients: [dynamoClient],
+      waitSeconds: 60
+    });
   });
 
   describe('models', function () {
@@ -91,15 +101,14 @@ describe('warehouse.ai-status-models (integration)', function () {
     });
 
     it('should create, find, update and remove a status record', async function () {
+      const key = { pkg: StatusFixture.pkg, env: StatusFixture.env, version: StatusFixture.version };
       await Status.create(StatusFixture);
       const result = await Status.findOne(StatusFixture);
       assertStatus(result);
-      const modified = { ...StatusFixture, complete: true };
-      const { pkg, env, version, complete } = modified;
-      await Status.update({ pkg, env, version, complete });
-      const result2 = await Status.findOne({ pkg, env, version });
-      assertStatus(result2, modified);
-      await Status.remove(modified);
+      await Status.update({ ...key, complete: true });
+      const result2 = await Status.findOne({ ...key });
+      assertStatus(result2, { ...StatusFixture, complete: true });
+      await Status.remove({ ...key });
     });
   });
 
