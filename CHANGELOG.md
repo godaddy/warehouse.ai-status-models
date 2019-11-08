@@ -1,6 +1,6 @@
 # Changelog
 
-- Fix changes to some model elements
+- Fix key for StatusHead, allow null for previousVersion
 
 ### 2.0.0
 
