@@ -12,7 +12,7 @@ const Joi = require('joi');
 module.exports = function statushead(dynamo) {
   const hashKey = 'key';
   const createKey = (data) => {
-    return `${data.pkg}!${data.env}!${data.version}`;
+    return `${data.pkg}!${data.env}`;
   };
   const model = dynamo.define('StatusHead', {
     hashKey,
@@ -23,7 +23,7 @@ module.exports = function statushead(dynamo) {
       pkg: Joi.string(),
       env: Joi.string(),
       version: Joi.string(),
-      previousVersion: Joi.string(),
+      previousVersion: Joi.string().allow(null),
       total: Joi.number()
     }
   });

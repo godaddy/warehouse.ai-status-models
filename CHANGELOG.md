@@ -1,7 +1,11 @@
 # Changelog
 
+- Fix changes to some model elements
+
+### 2.0.0
+
 - BREAKING--Convert datastar models to dynastar models
-  - Integration tests run against localstack instance 
+  - Integration tests run against localstack instance
 - [#4] Update documentation
   - Add badges
   - Add collected docs
