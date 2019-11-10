@@ -24,7 +24,7 @@ module.exports = function status(dynamo) {
       pkg: Joi.string(),
       env: Joi.string(),
       version: Joi.string(),
-      previousVersion: Joi.string(),
+      previousVersion: Joi.string().allow(null),
       total: Joi.number(),
       error: Joi.boolean(),
       complete: Joi.boolean()
