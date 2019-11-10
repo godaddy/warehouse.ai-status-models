@@ -1,5 +1,7 @@
 # Changelog
 
+### 2.0.1
+
 - Fix key for StatusHead, allow null for previousVersion
 
 ### 2.0.0
