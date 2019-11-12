@@ -1,5 +1,7 @@
 # Changelog
 
+- Fix TableName for status-head
+
 ### 2.0.1
 
 - Fix key for StatusHead, allow null for previousVersion
