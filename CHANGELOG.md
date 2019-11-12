@@ -1,5 +1,7 @@
 # Changelog
 
+### 2.0.2
+
 - Fix TableName for status-head
 
 ### 2.0.1
