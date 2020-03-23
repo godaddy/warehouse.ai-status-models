@@ -1,5 +1,7 @@
 # Changelog
 
+- Update dynastar to `^1.2.0`
+
 ### 2.0.2
 
 - Fix TableName for status-head
