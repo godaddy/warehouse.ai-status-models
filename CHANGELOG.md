@@ -1,5 +1,7 @@
 # Changelog
 
+- Remove Travis build for `node@8`, it was already unsupported due to requiring `stream.pipeline` and is well past LTS support.
+
 ### 2.0.3
 
 - Update dynastar to `^1.2.0`
